@@ -161,7 +161,7 @@ export default function DashboardPage() {
       {/* Today's sessions */}
       {sessions.length > 0 && (
         <div className="card">
-          <p className="font-bold text-slate-700 text-sm mb-3">Today's Sessions</p>
+          <p className="font-bold text-slate-700 text-sm mb-3">Today&apos;s Sessions</p>
           <div className="space-y-2">
             {sessions.map(sess => (
               <div key={sess.id} className="flex items-center gap-3 py-2 border-b border-slate-50 last:border-0">
