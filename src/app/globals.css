@@ -1,0 +1,93 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background-color: #f5f3ff;
+    color: #1e1b4b;
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-white rounded-2xl shadow-sm border border-quest-100 p-4;
+  }
+  .btn-primary {
+    @apply bg-quest-600 hover:bg-quest-700 text-white font-bold py-3 px-6 rounded-xl
+           transition-all duration-200 active:scale-95 disabled:opacity-50 text-sm shadow-sm;
+  }
+  .btn-ghost {
+    @apply text-quest-600 hover:bg-quest-50 font-semibold py-2 px-4 rounded-xl
+           transition-all duration-200 text-sm;
+  }
+  .input-field {
+    @apply w-full px-4 py-3 rounded-xl border border-quest-200 focus:border-quest-500
+           focus:ring-2 focus:ring-quest-100 outline-none transition-all
+           text-slate-800 placeholder-slate-400 bg-white text-sm;
+  }
+  .bottom-nav {
+    @apply fixed bottom-0 left-0 right-0 bg-white border-t border-quest-100
+           flex justify-around items-center h-16 z-50 shadow-lg max-w-lg mx-auto;
+  }
+  .nav-item {
+    @apply flex flex-col items-center gap-0.5 px-4 py-2 rounded-xl transition-all cursor-pointer;
+  }
+  .entry-ticket {
+    @apply inline-flex items-center gap-1 bg-amber-100 text-amber-700 font-bold
+           text-xs px-2.5 py-1 rounded-full;
+  }
+}
+
+/* Parent portal — imported by parent pages */
+.parent-bg {
+  background-color: #f8f9fb;
+  background-image:
+    radial-gradient(ellipse at 20% 10%, rgba(16,185,129,.04) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 80%, rgba(99,102,241,.03) 0%, transparent 60%);
+}
+
+.parent-card {
+  background: white;
+  border: 1px solid #e8ecf0;
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.04), 0 1px 2px rgba(0,0,0,.02);
+  transition: box-shadow .2s ease;
+}
+.parent-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.07); }
+.parent-card.clickable:active { transform: scale(.99); }
+
+.stat-number {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+.activity-bar { transition: height .4s cubic-bezier(.34,1.56,.64,1); }
+
+.pool-green { animation: poolPulse 3s ease-in-out infinite; }
+@keyframes poolPulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(16,185,129,.2); }
+  50%     { box-shadow: 0 0 0 6px rgba(16,185,129,0); }
+}
+
+.stagger > * { animation: fadeSlideUp .3s ease-out both; }
+.stagger > *:nth-child(1) { animation-delay: .05s; }
+.stagger > *:nth-child(2) { animation-delay: .10s; }
+.stagger > *:nth-child(3) { animation-delay: .15s; }
+.stagger > *:nth-child(4) { animation-delay: .20s; }
+.stagger > *:nth-child(5) { animation-delay: .25s; }
+@keyframes fadeSlideUp {
+  from { opacity:0; transform:translateY(8px); }
+  to   { opacity:1; transform:translateY(0);   }
+}
+
+.slide-in-right { animation: slideInRight .25s ease-out forwards; }
+@keyframes slideInRight {
+  from { opacity:0; transform:translateX(12px); }
+  to   { opacity:1; transform:translateX(0);    }
+}

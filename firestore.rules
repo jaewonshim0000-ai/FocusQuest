@@ -1,0 +1,90 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isLinkedParent(studentId) {
+      return get(/databases/$(database)/documents/students/$(studentId))
+        .data.get("parentUid", "") == request.auth.uid;
+    }
+
+    // ── Students ──────────────────────────────────────────────────────────────
+    match /students/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+      allow read: if request.auth != null && isLinkedParent(userId);
+      allow update: if request.auth != null
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(["parentUid"]);
+    }
+
+    // ── Focus Sessions ────────────────────────────────────────────────────────
+    match /focusSessions/{docId} {
+      allow create: if request.auth != null
+        && request.resource.data.studentId == request.auth.uid;
+      allow read: if request.auth != null
+        && (resource.data.studentId == request.auth.uid
+            || isLinkedParent(resource.data.studentId));
+    }
+
+    // ── Prize Entries ─────────────────────────────────────────────────────────
+    match /prizeEntries/{docId} {
+      allow create: if request.auth != null
+        && request.resource.data.studentId == request.auth.uid;
+      allow read: if request.auth != null
+        && (resource.data.studentId == request.auth.uid
+            || isLinkedParent(resource.data.studentId));
+    }
+
+    // ── Check-Ins (student-only, parents cannot read) ─────────────────────────
+    match /checkIns/{docId} {
+      allow read, write: if request.auth != null
+        && (resource == null || resource.data.studentId == request.auth.uid);
+    }
+
+    // ── Daily Quest Assignments ───────────────────────────────────────────────
+    match /dailyQuests/{docId} {
+      allow read, write: if request.auth != null
+        && (resource == null || resource.data.studentId == request.auth.uid);
+      allow read: if request.auth != null
+        && resource != null && isLinkedParent(resource.data.studentId);
+    }
+
+    // ── Quest Library ─────────────────────────────────────────────────────────
+    match /quests/{docId} {
+      allow read: if request.auth != null;
+      allow write: if false; // admin/Cloud Functions only
+    }
+
+    // ── Parent Profiles ───────────────────────────────────────────────────────
+    match /parents/{parentId} {
+      allow read, write: if request.auth != null && request.auth.uid == parentId;
+    }
+
+    // ── Parent-Child Links ────────────────────────────────────────────────────
+    match /parentChildLinks/{linkId} {
+      allow read:   if request.auth != null && resource.data.parentUid == request.auth.uid;
+      allow create: if request.auth != null;
+      allow delete: if request.auth != null && resource.data.parentUid == request.auth.uid;
+    }
+
+    // ── Invite Codes ──────────────────────────────────────────────────────────
+    match /inviteCodes/{code} {
+      allow read, create: if request.auth != null;
+      allow update: if request.auth != null
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(["usedBy", "usedAt"]);
+    }
+
+    // ── Parent Boosts ─────────────────────────────────────────────────────────
+    match /parentBoosts/{boostId} {
+      allow create: if request.auth != null
+        && request.resource.data.parentUid == request.auth.uid;
+      allow read: if request.auth != null
+        && (resource.data.parentUid == request.auth.uid
+            || resource.data.childUid == request.auth.uid);
+    }
+
+    // ── Draw Events ───────────────────────────────────────────────────────────
+    match /draws/{docId} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+  }
+}
