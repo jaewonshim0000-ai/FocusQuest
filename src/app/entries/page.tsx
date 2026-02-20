@@ -68,7 +68,7 @@ export default function EntriesPage() {
       {/* Weekly progress */}
       <div className="card mb-4">
         <div className="flex items-center justify-between mb-2">
-          <p className="font-bold text-slate-700 text-sm">This Week's Entries</p>
+          <p className="font-bold text-slate-700 text-sm">This Week&apos;s Entries</p>
           <span className="text-xs font-bold text-quest-600">{weeklyTotal} / {WEEKLY_MAX}</span>
         </div>
         <div className="bg-slate-100 rounded-full h-3 overflow-hidden">
